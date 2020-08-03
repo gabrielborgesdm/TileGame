@@ -5,6 +5,8 @@ import java.awt.image.BufferStrategy;
 
 import dev.gabe.tilegame.display.Display;
 import dev.gabe.tilegame.gfx.Assets;
+import dev.gabe.tilegame.gfx.GameCamera;
+import dev.gabe.tilegame.input.KeyManager;
 import dev.gabe.tilegame.states.GameState;
 import dev.gabe.tilegame.states.MenuState;
 import dev.gabe.tilegame.states.State;
@@ -12,7 +14,7 @@ import dev.gabe.tilegame.states.State;
 public class Game implements Runnable {
 	
 	private Display display;
-	public int width, height;
+	private int width, height;
 	public String title;
 	
 	private boolean running = false;
@@ -25,26 +27,41 @@ public class Game implements Runnable {
 	private State gameState;
 	private State menuState;
 	
+	//Input
+	private KeyManager keyManager;
+	
+	//Camera
+	private GameCamera gameCamera;
+	
+	//Handler
+	private Handler handler;
+	
 	public Game(String title, int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.title = title;
+		keyManager = new KeyManager();
 	}
 	
 	private void init() {
 		display = new Display(title, width, height);
+		display.getJFrame().addKeyListener(keyManager);
 		Assets.init();
 		
-		menuState = new MenuState();
-		gameState = new GameState();
+		gameCamera = new GameCamera(this, 0, 0);
+		handler = new Handler(this);
 		
-		State.setState(menuState);
-		//State.setState(gameState);
+		menuState = new MenuState(handler);
+		gameState = new GameState(handler);
+		
+		//State.setState(menuState);
+		State.setState(gameState);
 	}
 	
 	
 	private void tick() {
 		//tick can also be called update
+		keyManager.tick();
 		
 		if(State.getState() != null) {
 			State.getState().tick();
@@ -114,6 +131,22 @@ public class Game implements Runnable {
 		stop();
 	}
 	
+	public KeyManager getKeyManager() {
+		return keyManager;
+	}
+	
+	public GameCamera getGameCamera() {
+		return gameCamera;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
 	public synchronized void start() {
 		if(running) return;
 		

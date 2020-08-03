@@ -2,23 +2,33 @@ package dev.gabe.tilegame.states;
 
 import java.awt.Graphics;
 
-import dev.gabe.tilegame.gfx.Assets;
+import dev.gabe.tilegame.Handler;
+import dev.gabe.tilegame.entities.creatures.Player;
+import dev.gabe.tilegame.worlds.World;
 
 public class GameState extends State{
 	
-	public GameState() {
+	private Player player;
+	private World world;
+	
+	public GameState(Handler handler) {
+		super(handler);
+		world = new World(handler, "res/worlds/world1.txt");
+		handler.setWorld(world);
+		player = new Player(handler, 100, 100);
 		
 	}
 	
 	@Override
 	public void tick() {
-		
-		
+		world.tick();
+		player.tick();
 	}
 
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(Assets.dirt, 0, 0, null);
+		world.render(g);
+		player.render(g);
 	}
 	
 }
