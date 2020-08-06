@@ -1,27 +1,45 @@
 package dev.gabe.tilegame.gfx;
 
-import dev.gabe.tilegame.Game;
+import dev.gabe.tilegame.Handler;
 import dev.gabe.tilegame.entities.Entity;
+import dev.gabe.tilegame.tiles.Tile;
 
 public class GameCamera {
 	
-	private Game game;
+	private Handler handler;
 	private float xOffset, yOffset;
 	
-	public GameCamera(Game game, float xOffset, float yOffset) {
-		this.game = game;
+	public GameCamera(Handler handler, float xOffset, float yOffset) {
+		this.handler = handler;
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 	}
 	
+	public void checkBlankSpace() {
+		if(xOffset <= 0) {
+			xOffset = 0;
+		} else if(xOffset > handler.getWorld().getWidth() * Tile.TILE_WIDTH - handler.getWidth()) {
+			xOffset =  handler.getWorld().getWidth() * Tile.TILE_WIDTH - handler.getWidth();
+		}
+		
+		if(yOffset <= 0) {
+			yOffset = 0;
+		} else if (yOffset > handler.getWorld().getWidth() * Tile.TILE_HEIGHT - handler.getHeight()){
+			yOffset = handler.getWorld().getWidth() * Tile.TILE_HEIGHT - handler.getHeight();
+		}
+	}
+	
 	public void centerOnEmpty(Entity e) {
-		xOffset = e.getX() - game.getWidth() / 2 + e.getWidth() / 2;
-		yOffset = e.getY() - game.getHeight() / 2 + e.getHeight() / 2;
+		xOffset = e.getX() - handler.getWidth() / 2 + e.getWidth() / 2;
+		yOffset = e.getY() - handler.getHeight() / 2 + e.getHeight() / 2;
+		
+		checkBlankSpace();
 	}
 	
 	public void move(float xAmount, float yAmount) {
 		xOffset += xAmount;
 		yOffset += yAmount;
+		checkBlankSpace();
 	}
 
 	public float getxOffset() {
