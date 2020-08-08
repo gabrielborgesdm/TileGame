@@ -73,6 +73,14 @@ public class World {
 	public int getHeight() {
 		return height;
 	}
+	
+	public int getSpawnX() {
+		return spawnX;
+	}
+	
+	public int getSpawnY() {
+		return spawnY;
+	}
 		
 		
 }

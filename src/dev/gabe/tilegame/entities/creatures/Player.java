@@ -10,27 +10,31 @@ import dev.gabe.tilegame.gfx.Assets;
 public class Player extends Creature{
 	
 	//Animations
-	private Animation anim, animRight, animLeft;
+	private Animation anim, animDown, animTop, animRight, animLeft;
 
 	
 	public Player(Handler handler, float x, float y) {
 		super(handler, x, y, Creature.DEFAULT_CREATURE_WIDTH, Creature.DEFAULT_CREATURE_HEIGHT);
 		
-		bounds.x = 24;
+		bounds.x = 15;
 		bounds.y = 33;
-		bounds.width = 16;
-		bounds.height = 32;
+		bounds.width = 33;
+		bounds.height = 28;
 		
 		//Animations
-		anim = new Animation(200, Assets.player);
-		animRight = new Animation(200, Assets.playerRight);
-		animLeft = new Animation(200, Assets.playerLeft);
+		anim = new Animation(180, Assets.player);
+		animDown = new Animation(180, Assets.playerDown);
+		animTop = new Animation(180, Assets.playerTop);
+		animRight = new Animation(180, Assets.playerRight);
+		animLeft = new Animation(180, Assets.playerLeft);
 	}
 	
 	@Override
 	public void tick() {
 		//Animations
 		anim.tick();
+		animTop.tick();
+		animDown.tick();
 		animRight.tick();
 		animLeft.tick();
 		
@@ -55,6 +59,8 @@ public class Player extends Creature{
 	@Override
 	public void render(Graphics g) {
 		g.drawImage(getCurrentAnimationFrame(), (int) (x - handler.getGameCamera().getxOffset()), (int) (y - handler.getGameCamera().getyOffset()), width, height, null);
+		//g.fillRect((int) (x - handler.getGameCamera().getxOffset() + bounds.x), (int) (y - handler.getGameCamera().getyOffset() + + bounds.y), bounds.width, bounds.height);
+
 	}
 	
 	private BufferedImage getCurrentAnimationFrame() {
@@ -62,8 +68,10 @@ public class Player extends Creature{
 			return animRight.getCurrentFrame();			
 		} else if(xMove < 0) {
 			return animLeft.getCurrentFrame();	
-		} else if(yMove > 0 || yMove < 0){
-			return animRight.getCurrentFrame();
+		} else if(yMove > 0){
+			return animDown.getCurrentFrame();
+		} else if(yMove < 0){
+			return animTop.getCurrentFrame();
 		} else {
 			return anim.getCurrentFrame();
 		}

@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 import dev.gabe.tilegame.Handler;
 import dev.gabe.tilegame.entities.creatures.Player;
+import dev.gabe.tilegame.tiles.Tile;
 import dev.gabe.tilegame.worlds.World;
 
 public class GameState extends State{
@@ -15,7 +16,7 @@ public class GameState extends State{
 		super(handler);
 		world = new World(handler, "res/worlds/world1.txt");
 		handler.setWorld(world);
-		player = new Player(handler, 100, 100);
+		player = new Player(handler, world.getSpawnX() * Tile.TILE_WIDTH, world.getSpawnY() * Tile.TILE_HEIGHT);
 		
 	}
 	
